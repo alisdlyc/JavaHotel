@@ -18,9 +18,8 @@ public class Client {
     public static void main(String[] args) throws UnknownHostException {
         Socket socket = new Socket();
 
-        ClientConfig clientConfig = new ClientConfig(3000, 2000, Inet4Address.getLocalHost());
+        ClientConfig clientConfig = new ClientConfig(3000, 12000, Inet4Address.getLocalHost());
 
-        // 连接本地，端口2000；超时时间3000ms
 
         try (socket) {
             socket.setSoTimeout(clientConfig.getTimeout());

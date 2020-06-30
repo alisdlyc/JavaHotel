@@ -1,29 +1,31 @@
 package com.alisdlyc.hotel.server;
 
 
+import com.alisdlyc.hotel.utils.CommandProcessor;
+import com.alisdlyc.hotel.utils.CookieStorage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 public class Server {
 
-    private static HashMap<String, String> map = null;
+    private static CookieStorage cookieStorage;
 
     public static void main(String[] args) throws IOException {
 
-        map = new HashMap<>(10);
+        ServerSocket server = new ServerSocket(12000);
 
-        ServerSocket server = new ServerSocket(2000);
+        cookieStorage = new CookieStorage();
 
         System.out.println("服务器准备就绪～");
         System.out.println("服务器信息：" + server.getInetAddress() + " P:" + server.getLocalPort());
 
         // 等待客户端连接
-        for (; ; ) {
+        for ( ; ; ) {
             // 得到客户端
             Socket client = server.accept();
             // 客户端构建异步线程
@@ -56,8 +58,8 @@ public class Server {
                 socketOutput.println("server Connected, please enter command:");
                 // 得到输入流，用于接收数据
                 BufferedReader socketInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                // 存入用户标识和权限信息
-                map.put("" + socket.getInetAddress() + socket.getPort(), null);
+                // 添加客户端状态信息
+                cookieStorage.loginStage.put("" + socket.getInetAddress() + socket.getPort(), null);
 
                 do {
                     // 客户端拿到一条数据
@@ -70,7 +72,8 @@ public class Server {
                         // 对客户端发送的信息进行响应
                         // TODO 将指令和对应的sql操作封装为 hashmap, 获取指令时, 寻找对应的操作, 并回送数据
 
-                        socketOutput.println("回送：" + str.length());
+                        str = new CommandProcessor().process(str, cookieStorage, socket);
+                        socketOutput.println("回送：" + str);
                     }
 
                 } while (flag);

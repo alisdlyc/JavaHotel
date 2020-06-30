@@ -1,6 +1,5 @@
 package com.alisdlyc.hotel.client.config;
 
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
