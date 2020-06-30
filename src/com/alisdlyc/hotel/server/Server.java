@@ -1,4 +1,4 @@
-package com.alisdlyc.hotel.Server;
+package com.alisdlyc.hotel.server;
 
 
 import java.io.BufferedReader;
@@ -38,7 +38,7 @@ public class Server {
      * 客户端消息处理
      */
     private static class ClientHandler extends Thread {
-        private Socket socket;
+        private final Socket socket;
         private boolean flag = true;
 
         ClientHandler(Socket socket) {
@@ -53,7 +53,7 @@ public class Server {
             try {
                 // 得到打印流，用于数据输出；服务器回送数据使用
                 PrintStream socketOutput = new PrintStream(socket.getOutputStream());
-                socketOutput.println("Server Connected, please enter command:");
+                socketOutput.println("server Connected, please enter command:");
                 // 得到输入流，用于接收数据
                 BufferedReader socketInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 // 存入用户标识和权限信息
