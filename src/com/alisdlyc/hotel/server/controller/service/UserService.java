@@ -1,4 +1,4 @@
-package com.alisdlyc.hotel.Server.controller.service;
+package com.alisdlyc.hotel.server.controller.service;
 
 public interface UserService {
     void addUser(String usr, String psw);

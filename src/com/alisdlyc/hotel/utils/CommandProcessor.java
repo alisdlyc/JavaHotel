@@ -1,11 +1,11 @@
 package com.alisdlyc.hotel.utils;
 
-import com.alisdlyc.hotel.Server.controller.service.OrderService;
-import com.alisdlyc.hotel.Server.controller.service.RoomService;
-import com.alisdlyc.hotel.Server.controller.service.UserService;
-import com.alisdlyc.hotel.Server.controller.service.serviceImpl.OrderServiceImpl;
-import com.alisdlyc.hotel.Server.controller.service.serviceImpl.RoomServiceImpl;
-import com.alisdlyc.hotel.Server.controller.service.serviceImpl.UserServiceImpl;
+import com.alisdlyc.hotel.server.controller.service.OrderService;
+import com.alisdlyc.hotel.server.controller.service.RoomService;
+import com.alisdlyc.hotel.server.controller.service.UserService;
+import com.alisdlyc.hotel.server.controller.service.serviceImpl.OrderServiceImpl;
+import com.alisdlyc.hotel.server.controller.service.serviceImpl.RoomServiceImpl;
+import com.alisdlyc.hotel.server.controller.service.serviceImpl.UserServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

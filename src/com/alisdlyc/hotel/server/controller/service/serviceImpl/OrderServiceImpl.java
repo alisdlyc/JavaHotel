@@ -1,6 +1,6 @@
-package com.alisdlyc.hotel.Server.controller.service.serviceImpl;
+package com.alisdlyc.hotel.server.controller.service.serviceImpl;
 
-import com.alisdlyc.hotel.Server.controller.service.OrderService;
+import com.alisdlyc.hotel.server.controller.service.OrderService;
 
 public class OrderServiceImpl implements OrderService {
     @Override
