@@ -7,6 +7,7 @@ import com.alisdlyc.hotel.server.controller.service.serviceImpl.OrderServiceImpl
 import com.alisdlyc.hotel.server.controller.service.serviceImpl.RoomServiceImpl;
 import com.alisdlyc.hotel.server.controller.service.serviceImpl.UserServiceImpl;
 
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,39 +29,42 @@ public class CommandProcessor {
     final static RoomService roomService = new RoomServiceImpl();
     final static OrderService orderService = new OrderServiceImpl();
 
-    public void process(String command) {
+    public String process(String command, CookieStorage cookie, Socket socket) {
         List<String> list = commandParse(command);
+
         switch (list.get(0)) {
             case CREATE_USER:
-                userService.addUser(list.get(1), list.get(2));
-                break;
+                return userService.addUser(list.get(1), list.get(2));
 
             case LOGIN:
-                userService.login(list.get(1), list.get(2));
-                break;
+                String usr = cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort());
+                // 若当前已经登陆
+                if ( usr != null) {
+                    if (usr.equals(list.get(1))){
+                        return "当前账户已经登陆";
+                    } else {
+                        return "请先退出当前账号";
+                    }
+                }
+                return userService.login(cookie, socket, list.get(1), list.get(2));
 
             case LOGOUT:
-                userService.logout();
-                break;
+                return userService.logout(cookie, socket);
 
             case DELETE:
-                userService.adminDelete("admin", list.get(2));
-                break;
+                return userService.adminDelete(cookie, socket, "admin", list.get(2));
 
             case ADDROOM:
-                roomService.addRoom(list.get(1));
-                break;
+                return roomService.addRoom(list.get(1));
 
             case RESERVE_ROOM:
-                orderService.reserveRoom(list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
-                break;
+                return orderService.reserveRoom(list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
 
             case SHOW_RESERVATIONS:
-                userService.showReservations();
-                break;
+                return userService.showReservations(cookie, socket);
 
             default:
-                break;
+                return "FAIL";
         }
     }
 

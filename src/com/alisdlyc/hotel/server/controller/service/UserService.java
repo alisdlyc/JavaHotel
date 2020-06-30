@@ -1,9 +1,13 @@
 package com.alisdlyc.hotel.server.controller.service;
 
+import com.alisdlyc.hotel.utils.CookieStorage;
+
+import java.net.Socket;
+
 public interface UserService {
-    void addUser(String usr, String psw);
-    void login(String usr, String psw);
-    void logout();
-    void adminDelete(String admin, String usr);
-    void showReservations();
+    String addUser(String usr, String psw);
+    String login(CookieStorage cookie, Socket socket, String usr, String psw);
+    String logout(CookieStorage cookie, Socket socket);
+    String adminDelete(CookieStorage cookie, Socket socket, String admin, String usr);
+    String showReservations(CookieStorage cookie, Socket socket);
 }
