@@ -143,8 +143,99 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String showReservations(CookieStorage cookie, Socket socket) {
-        return null;
+
+        if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
+            return "请登录";
+        }
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            conn = JdbcUtils.getConnection();
+
+            String sql = "SELECT `authority` FROM usr where `name` = ?";
+
+            st = conn.prepareStatement(sql);
+            st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
+
+            rs = st.executeQuery();
+            if (rs.next() && Integer.parseInt(rs.getString("authority")) >= 1) {
+                sql = "SELECT * FROM `order`";
+                st = conn.prepareStatement(sql);
+                rs = st.executeQuery();
+                StringBuilder re = new StringBuilder();
+                while (rs.next()) {
+                    re.append(rs.getString("id"));
+                    re.append(" ");
+
+                    re.append(rs.getString("usrname"));
+                    re.append(" ");
+
+                    re.append(rs.getString("roomnumber"));
+                    re.append(" ");
+
+                    re.append(rs.getString("begintime"));
+                    re.append(" ");
+
+                    re.append(rs.getString("endtime"));
+                    re.append("\t");
+
+                }
+                return re.toString();
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "FAIL";
+        } finally {
+            JdbcUtils.release(conn, st, rs);
+        }
+        return "FAIL";
     }
 
+    @Override
+    public String showReservation(CookieStorage cookie, Socket socket) {
+        if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
+            return "请登录";
+        }
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
 
+        try {
+            conn = JdbcUtils.getConnection();
+
+            String sql = "SELECT * FROM `order` WHERE `usrname` = ?";
+            st = conn.prepareStatement(sql);
+            st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
+            rs = st.executeQuery();
+            StringBuilder re = new StringBuilder();
+            while (rs.next()) {
+                re.append(rs.getString("id"));
+                re.append(" ");
+
+                re.append(rs.getString("usrname"));
+                re.append(" ");
+
+                re.append(rs.getString("roomnumber"));
+                re.append(" ");
+
+                re.append(rs.getString("begintime"));
+                re.append(" ");
+
+                re.append(rs.getString("endtime"));
+                re.append("\t");
+
+            }
+            return re.toString();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "FAIL";
+        } finally {
+            JdbcUtils.release(conn, st, rs);
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class CommandCheckUtil {
     final static String ADDROOM = "addroom";
     final static String RESERVE_ROOM = "reserve_room";
     final static String SHOW_RESERVATIONS = "show_reservations";
+    final static String SHOW_RESERVATION = "show_reservation";
     private static final HashSet<String> COMMAND = new HashSet<>();
 
     static {
@@ -26,6 +27,7 @@ public class CommandCheckUtil {
         COMMAND.add(ADDROOM);
         COMMAND.add(RESERVE_ROOM);
         COMMAND.add(SHOW_RESERVATIONS);
+        COMMAND.add(SHOW_RESERVATION);
     }
 
     /**
@@ -46,7 +48,7 @@ public class CommandCheckUtil {
 
         return switch (list[0]) {
             case CREATE_USER, LOGIN, DELETE -> checkLengthAndEmpty(list, 3);
-            case LOGOUT, SHOW_RESERVATIONS -> checkLengthAndEmpty(list, 1);
+            case LOGOUT, SHOW_RESERVATIONS, SHOW_RESERVATION -> checkLengthAndEmpty(list, 1);
             case ADDROOM -> checkAddRoom(list, 2);
             case RESERVE_ROOM -> checkReserveRoom(list, 8);
             default -> COMMAND_NOT_FOUND;

@@ -73,7 +73,7 @@
 
 + 超级管理员删除管理员
 
-  + 命令格式:delete admin username 
+  + 命令格式:delete_admin username 
   + 删除成果返回OK，失败（不存在此用户）返回FAIL
 
 + 管理员添加旅馆房间信息
