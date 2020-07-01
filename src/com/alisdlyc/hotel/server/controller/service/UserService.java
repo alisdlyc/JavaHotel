@@ -10,4 +10,5 @@ public interface UserService {
     String logout(CookieStorage cookie, Socket socket);
     String adminDelete(CookieStorage cookie, Socket socket, String admin, String usr);
     String showReservations(CookieStorage cookie, Socket socket);
+    String showReservation(CookieStorage cookie, Socket socket);
 }

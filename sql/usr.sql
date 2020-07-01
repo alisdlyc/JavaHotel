@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 30/06/2020 14:27:16
+ Date: 01/07/2020 00:11:08
 */
 
 SET NAMES utf8mb4;
@@ -32,13 +32,12 @@ CREATE TABLE `usr`  (
 -- ----------------------------
 -- Records of usr
 -- ----------------------------
-INSERT INTO `usr` VALUES (1, 'qwq', '5252634', 0);
+INSERT INTO `usr` VALUES (1, 'qwq', '1', 0);
 INSERT INTO `usr` VALUES (2, 'alisdlyc', '123456', 0);
 INSERT INTO `usr` VALUES (6, 'alisdlsyc', '123456', 0);
 INSERT INTO `usr` VALUES (7, 'username', 'password', 0);
 INSERT INTO `usr` VALUES (8, 'username2', 'password', 0);
 INSERT INTO `usr` VALUES (9, 'user', 'qwq', 0);
 INSERT INTO `usr` VALUES (10, 'root', 'root', 2);
-INSERT INTO `usr` VALUES (11, 'admin', '2323', 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

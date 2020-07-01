@@ -20,10 +20,11 @@ public class CommandProcessor {
     final static String CREATE_USER = "create";
     final static String LOGIN = "login";
     final static String LOGOUT = "logout";
-    final static String DELETE = "adminDelete";
+    final static String DELETE = "delete_admin";
     final static String ADDROOM = "addroom";
     final static String RESERVE_ROOM = "reserve_room";
     final static String SHOW_RESERVATIONS = "show_reservations";
+    final static String SHOW_RESERVATION = "show_reservation";
 
     final static UserService userService = new UserServiceImpl();
     final static RoomService roomService = new RoomServiceImpl();
@@ -55,13 +56,16 @@ public class CommandProcessor {
                 return userService.adminDelete(cookie, socket, "admin", list.get(2));
 
             case ADDROOM:
-                return roomService.addRoom(list.get(1));
+                return roomService.addRoom(cookie, socket, list.get(1));
 
             case RESERVE_ROOM:
-                return orderService.reserveRoom(list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
+                return orderService.reserveRoom(cookie, socket, list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
 
             case SHOW_RESERVATIONS:
                 return userService.showReservations(cookie, socket);
+
+            case SHOW_RESERVATION:
+                return userService.showReservation(cookie, socket);
 
             default:
                 return "FAIL";
