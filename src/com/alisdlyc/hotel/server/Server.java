@@ -11,6 +11,9 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * @author alisdlyc
+ */
 public class Server {
 
     private static CookieStorage cookieStorage;
