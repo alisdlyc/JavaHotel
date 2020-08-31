@@ -4,6 +4,9 @@ import com.alisdlyc.hotel.utils.CookieStorage;
 
 import java.net.Socket;
 
+/**
+ * @author alisdlyc
+ */
 public interface UserService {
     String addUser(String usr, String psw);
     String login(CookieStorage cookie, Socket socket, String usr, String psw);
