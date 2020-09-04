@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
  * @author wangz
  */
 public class ClientConfig {
-    final public static String STOP = "qwq";
+    final public static String STOP = "end";
     private final int timeout;
     private final InetSocketAddress inetSocketAddress;
 
