@@ -63,6 +63,10 @@ public class Client {
             // 键盘读取一行
             String str = input.readLine();
 
+            if ("end".equals(str)) {
+                System.exit(0);
+            }
+
             //校验一下,如果命令合法继续,否则跳过本次循环
             int check = CommandCheckUtil.check(str);
             if (check != SUCCESS) {
@@ -79,7 +83,13 @@ public class Client {
             if (ClientConfig.STOP.equalsIgnoreCase(echo)) {
                 flag = false;
             } else {
-                System.out.println(echo);
+
+                if (echo == null || echo.length() == 0) {
+                    System.out.println("none");
+                } else {
+                    System.out.println(echo);
+
+                }
             }
         } while (flag);
 

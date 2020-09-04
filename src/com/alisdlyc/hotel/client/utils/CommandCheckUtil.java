@@ -12,7 +12,6 @@ public class CommandCheckUtil {
     final static String CREATE_USER = "create";
     final static String LOGIN = "login";
     final static String LOGOUT = "logout";
-    final static String DELETE = "delete_admin";
     final static String ADDROOM = "addroom";
     final static String RESERVE_ROOM = "reserve_room";
     final static String SHOW_RESERVATIONS = "show_reservations";
@@ -23,7 +22,6 @@ public class CommandCheckUtil {
         COMMAND.add(CREATE_USER);
         COMMAND.add(LOGIN);
         COMMAND.add(LOGOUT);
-        COMMAND.add(DELETE);
         COMMAND.add(ADDROOM);
         COMMAND.add(RESERVE_ROOM);
         COMMAND.add(SHOW_RESERVATIONS);
@@ -41,13 +39,17 @@ public class CommandCheckUtil {
         }
         String[] list = command.split(" ");
 
+        if ("delete".equals(list[0]) && "admin".equals(list[1]) && list.length == 3) {
+            return 0;
+        }
+
         // 输入的命令虽然不为存在但是并不是真正的命令
         if (!COMMAND.contains(list[0])) {
             return COMMAND_NOT_FOUND;
         }
 
         return switch (list[0]) {
-            case CREATE_USER, LOGIN, DELETE -> checkLengthAndEmpty(list, 3);
+            case CREATE_USER, LOGIN -> checkLengthAndEmpty(list, 3);
             case LOGOUT, SHOW_RESERVATIONS, SHOW_RESERVATION -> checkLengthAndEmpty(list, 1);
             case ADDROOM -> checkAddRoom(list, 2);
             case RESERVE_ROOM -> checkReserveRoom(list, 8);

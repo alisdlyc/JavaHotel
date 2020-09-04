@@ -11,12 +11,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * @author alisdlyc
+ */
 public class OrderServiceImpl implements OrderService {
 
     @Override
     public String reserveRoom(CookieStorage cookie, Socket socket, String peopleNumber, String startYear, String startMonth, String startDay, String endYear, String endMonth, String endDay) {
         if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
-            return "请先登录";
+            return "FAIL";
         }
 
         Connection conn = null;
@@ -108,10 +111,10 @@ public class OrderServiceImpl implements OrderService {
             JdbcUtils.release(conn, st, rs);
         }
     }
+
     private static class ValueComparator implements Comparator<Map.Entry<String,String>> {
         @Override
-        public int compare(Map.Entry<String,String> m, Map.Entry<String,String> n)
-        {
+        public int compare(Map.Entry<String,String> m, Map.Entry<String,String> n) {
             return Integer.parseInt(n.getValue()) - Integer.parseInt(m.getValue());
         }
 

@@ -20,7 +20,7 @@ public class CommandProcessor {
     final static String CREATE_USER = "create";
     final static String LOGIN = "login";
     final static String LOGOUT = "logout";
-    final static String DELETE = "delete_admin";
+    final static String DELETE = "delete";
     final static String ADDROOM = "addroom";
     final static String RESERVE_ROOM = "reserve_room";
     final static String SHOW_RESERVATIONS = "show_reservations";
@@ -31,6 +31,7 @@ public class CommandProcessor {
     final static OrderService orderService = new OrderServiceImpl();
 
     public String process(String command, CookieStorage cookie, Socket socket) {
+
         List<String> list = commandParse(command);
 
         switch (list.get(0)) {

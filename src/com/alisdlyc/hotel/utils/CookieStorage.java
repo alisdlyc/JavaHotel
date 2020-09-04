@@ -9,6 +9,6 @@ public class CookieStorage {
     public HashMap<String, String> loginStage;
 
     public CookieStorage() {
-        loginStage = new HashMap<String, String>();
+        loginStage = new HashMap<>();
     }
 }
