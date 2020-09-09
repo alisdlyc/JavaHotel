@@ -50,8 +50,6 @@ public class UserServiceImpl implements UserService {
             }
         } catch (SQLException e) {
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -82,8 +80,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -145,8 +141,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -181,8 +175,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -232,8 +224,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
     }
 }

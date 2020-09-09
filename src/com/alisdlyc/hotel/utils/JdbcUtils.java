@@ -46,7 +46,7 @@ public class JdbcUtils {
     /**
      * 释放资源
      */
-    public static void release(Connection conn, Statement st, ResultSet rs) {
+    private static void release(Connection conn, Statement st, ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();

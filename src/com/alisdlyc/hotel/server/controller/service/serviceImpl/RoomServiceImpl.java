@@ -69,8 +69,6 @@ public class RoomServiceImpl implements RoomService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
     }
 }
