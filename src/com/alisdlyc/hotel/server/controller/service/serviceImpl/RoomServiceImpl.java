@@ -42,7 +42,9 @@ public class RoomServiceImpl implements RoomService {
             String primSql = "SELECT `authority` FROM usr where `name` = ?";
 
             st = conn.prepareStatement(primSql);
+
             st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
+
             rs = st.executeQuery();
 
             if (rs.next()) {
@@ -55,6 +57,7 @@ public class RoomServiceImpl implements RoomService {
 
             String sql = "INSERT INTO `room`(`roomnumber`) VALUES(?)";
             st = conn.prepareStatement(sql);
+
             st.setString(1, number);
             int i = st.executeUpdate();
             if (i > 0) {

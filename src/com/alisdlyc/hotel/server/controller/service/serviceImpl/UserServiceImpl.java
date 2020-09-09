@@ -174,24 +174,7 @@ public class UserServiceImpl implements UserService {
                 sql = "SELECT * FROM `order`";
                 st = conn.prepareStatement(sql);
                 rs = st.executeQuery();
-                StringBuilder re = new StringBuilder();
-                while (rs.next()) {
-                    re.append(rs.getString("id"));
-                    re.append(" ");
-
-                    re.append(rs.getString("usrname"));
-                    re.append(" ");
-
-                    re.append(rs.getString("roomnumber"));
-                    re.append(" ");
-
-                    re.append(rs.getString("begintime"));
-                    re.append(" ");
-
-                    re.append(rs.getString("endtime"));
-                    re.append("\n");
-
-                }
+                StringBuilder re = getStringBuilder(rs);
                 return re.toString();
 
             }
@@ -202,6 +185,28 @@ public class UserServiceImpl implements UserService {
             JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
+    }
+
+    private StringBuilder getStringBuilder(ResultSet rs) throws SQLException {
+        StringBuilder re = new StringBuilder();
+        while (rs.next()) {
+            re.append(rs.getString("id"));
+            re.append(" ");
+
+            re.append(rs.getString("usrname"));
+            re.append(" ");
+
+            re.append(rs.getString("roomnumber"));
+            re.append(" ");
+
+            re.append(rs.getString("begintime"));
+            re.append(" ");
+
+            re.append(rs.getString("endtime"));
+            re.append("\n");
+
+        }
+        return re;
     }
 
     @Override
@@ -220,23 +225,7 @@ public class UserServiceImpl implements UserService {
             st = conn.prepareStatement(sql);
             st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
             rs = st.executeQuery();
-            StringBuilder re = new StringBuilder();
-            while (rs.next()) {
-                re.append(rs.getString("id"));
-                re.append(" ");
-
-                re.append(rs.getString("usrname"));
-                re.append(" ");
-
-                re.append(rs.getString("roomnumber"));
-                re.append(" ");
-
-                re.append(rs.getString("begintime"));
-                re.append(" ");
-
-                re.append(rs.getString("endtime"));
-                re.append("\n");
-            }
+            StringBuilder re = getStringBuilder(rs);
             return re.toString();
 
 

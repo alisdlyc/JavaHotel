@@ -20,7 +20,6 @@ public class Client {
 
         ClientConfig clientConfig = new ClientConfig(3000, 12000, Inet4Address.getLocalHost());
 
-
         try (socket) {
             socket.setSoTimeout(clientConfig.getTimeout());
 

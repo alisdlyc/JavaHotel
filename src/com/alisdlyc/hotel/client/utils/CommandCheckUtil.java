@@ -84,7 +84,6 @@ public class CommandCheckUtil {
             //校验数据的合法性,保证输入的日期肯定是正整数
             for (int i = 1; i < length; i++) {
                 try {
-
                     if (Integer.parseInt(list[i]) <= 0) {
                         throw new Exception("");
                     }
