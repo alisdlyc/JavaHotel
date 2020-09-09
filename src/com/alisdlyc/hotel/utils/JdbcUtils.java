@@ -2,6 +2,7 @@ package com.alisdlyc.hotel.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.sql.*;
 import java.util.Properties;
 
@@ -68,5 +69,10 @@ public class JdbcUtils {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public static int socketHash(Socket socket) {
+        String IPMsg = "" + socket.getInetAddress() + ":" + socket.getPort();
+        return IPMsg.hashCode();
     }
 }

@@ -1,13 +1,6 @@
 package com.alisdlyc.hotel.utils;
+import com.alisdlyc.hotel.server.entry.User;
 
-import com.alisdlyc.hotel.server.controller.service.OrderService;
-import com.alisdlyc.hotel.server.controller.service.RoomService;
-import com.alisdlyc.hotel.server.controller.service.UserService;
-import com.alisdlyc.hotel.server.controller.service.serviceImpl.OrderServiceImpl;
-import com.alisdlyc.hotel.server.controller.service.serviceImpl.RoomServiceImpl;
-import com.alisdlyc.hotel.server.controller.service.serviceImpl.UserServiceImpl;
-
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,56 +19,31 @@ public class CommandProcessor {
     final static String SHOW_RESERVATIONS = "show_reservations";
     final static String SHOW_RESERVATION = "show_reservation";
 
-    final static UserService userService = new UserServiceImpl();
-    final static RoomService roomService = new RoomServiceImpl();
-    final static OrderService orderService = new OrderServiceImpl();
-
-    public String process(String command, CookieStorage cookie, Socket socket) {
+    public String process(String command, User usr) {
         List<String> list = commandParse(command);
 
-        switch (list.get(0)) {
-            case CREATE_USER:
-                return userService.addUser(list.get(1), list.get(2));
-
-            case LOGIN:
-                String usr = cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort());
-                // 若当前已经登陆
-                if ( usr != null) {
-                    if (usr.equals(list.get(1))){
-                        return "当前账户已经登陆";
-                    } else {
-                        return "请先退出当前账号";
-                    }
-                }
-                return userService.login(cookie, socket, list.get(1), list.get(2));
-
-            case LOGOUT:
-                return userService.logout(cookie, socket);
-
-            case DELETE:
-                return userService.adminDelete(cookie, socket, "admin", list.get(2));
-
-            case ADDROOM:
-                return roomService.addRoom(cookie, socket, list.get(1));
-
-            case RESERVE_ROOM:
-                return orderService.reserveRoom(cookie, socket, list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
-
-            case SHOW_RESERVATIONS:
-                return userService.showReservations(cookie, socket);
-
-            case SHOW_RESERVATION:
-                return userService.showReservation(cookie, socket);
-
-            default:
-                return "FAIL";
+        try {
+            // 若当前已经登陆
+            return switch (list.get(0)) {
+                case CREATE_USER -> usr.addUser(list.get(1), list.get(2));
+                case LOGIN -> usr.login(list.get(1), list.get(2));
+                case LOGOUT -> usr.logout();
+                case DELETE -> usr.adminDelete("admin", list.get(2));
+                case ADDROOM -> usr.addRoom(list.get(1));
+                case RESERVE_ROOM -> usr.reserveRoom(list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
+                case SHOW_RESERVATIONS -> usr.showReservations();
+                case SHOW_RESERVATION -> usr.showReservation();
+                default -> "FAIL";
+            };
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return "FAIL";
     }
 
     private List<String> commandParse(String command) {
         String[] list = command.split(" ");
         return Arrays.asList(list);
-
     }
 
 }
