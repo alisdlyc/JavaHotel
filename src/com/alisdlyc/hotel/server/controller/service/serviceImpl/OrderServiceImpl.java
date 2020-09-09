@@ -15,6 +15,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String reserveRoom(CookieStorage cookie, Socket socket, String peopleNumber, String startYear, String startMonth, String startDay, String endYear, String endMonth, String endDay) {
+
         if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
             return "请先登录";
         }
@@ -26,16 +27,20 @@ public class OrderServiceImpl implements OrderService {
 
         try {
             conn = JdbcUtils.getConnection();
-            String sql = "SELECT `roomnumber`, `capacity`\n" +
-                    "FROM `room`\n" +
-                    "WHERE `roomnumber` NOT IN\n" +
-                    "\t(SELECT `roomnumber`\n" +
-                    "\tFROM `order`\n" +
-                    "\tWHERE (`order`.begintime BETWEEN ? AND ?)\n" +
-                    "\t\tOR (`order`.endtime BETWEEN ? AND ?)\n" +
-                    "\t\tOR (`order`.begintime < ? AND `order`.endtime > ?)\n" +
-                    "\t)\n";
+            String sql = """
+                    SELECT `roomnumber`, `capacity`
+                    FROM `room`
+                    WHERE `roomnumber` NOT IN
+                    \t(SELECT `roomnumber`
+                    \tFROM `order`
+                    \tWHERE (`order`.begintime BETWEEN ? AND ?)
+                    \t\tOR (`order`.endtime BETWEEN ? AND ?)
+                    \t\tOR (`order`.begintime < ? AND `order`.endtime > ?)
+                    \t)
+                    """;
+
             st = conn.prepareStatement(sql);
+
             String startTime = "" + startYear + "-" + startMonth + "-" + startDay;
             String endTime = "" + endYear + "-" + endMonth + "-" + endDay;
             st.setString(1, startTime);
@@ -44,18 +49,21 @@ public class OrderServiceImpl implements OrderService {
             st.setString(2, endTime);
             st.setString(4, endTime);
             st.setString(6, endTime);
+
             rs = st.executeQuery();
+
             while (rs.next()) {
                 hotelInfo.put(rs.getString("roomnumber"), rs.getString("capacity"));
             }
 
             // 对获取到的 hotelInfo 信息进行遍历
 
-            List<Map.Entry<String, String>> sortHotelInfo = new ArrayList<>();
-            sortHotelInfo.addAll(hotelInfo.entrySet());
-            Collections.sort(sortHotelInfo, new ValueComparator());
+            List<Map.Entry<String, String>> sortHotelInfo = new ArrayList<>(hotelInfo.entrySet());
+
+            sortHotelInfo.sort(new ValueComparator());
 
             int peopleCapacity = Integer.parseInt(peopleNumber);
+
             List<String> re = new LinkedList<>();
 
             System.out.println(sortHotelInfo);
@@ -73,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
             if (peopleCapacity != 0) {
                 return "FAIL";
             } else {
-                System.out.println("马上马上啦");
                 int i = 0;
                 for (String str : re) {
                     System.out.println(str);
@@ -103,9 +110,7 @@ public class OrderServiceImpl implements OrderService {
             return "FAIL";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "FAIL -- Exception";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
+            return "FAIL";
         }
     }
     private static class ValueComparator implements Comparator<Map.Entry<String,String>> {

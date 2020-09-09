@@ -8,6 +8,7 @@ import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import static com.alisdlyc.hotel.client.config.ClientConfig.STOP;
 import static com.alisdlyc.hotel.client.utils.CommandCheckUtil.COMMAND_NOT_FOUND;
 import static com.alisdlyc.hotel.client.utils.CommandCheckUtil.SUCCESS;
 
@@ -15,11 +16,12 @@ import static com.alisdlyc.hotel.client.utils.CommandCheckUtil.SUCCESS;
  * @author wangz
  */
 public class Client {
-    public static void main(String[] args) throws UnknownHostException {
+
+
+    public void start() throws UnknownHostException {
         Socket socket = new Socket();
 
         ClientConfig clientConfig = new ClientConfig(3000, 12000, Inet4Address.getLocalHost());
-
 
         try (socket) {
             socket.setSoTimeout(clientConfig.getTimeout());
@@ -30,18 +32,17 @@ public class Client {
             System.out.println("客户端信息：" + socket.getLocalAddress() + " P:" + socket.getLocalPort());
             System.out.println("服务器信息：" + socket.getInetAddress() + " P:" + socket.getPort());
 
-            // 发送接收数据
             run(socket);
+
         } catch (Exception e) {
             System.out.println("异常关闭");
         } finally {
-            // 释放资源
             System.out.println("客户端已退出～");
         }
-
     }
 
-    private static void run(Socket client) throws IOException {
+
+    private void run(Socket client) throws IOException {
         // 构建键盘输入流
         InputStream in = System.in;
         BufferedReader input = new BufferedReader(new InputStreamReader(in));
@@ -63,7 +64,7 @@ public class Client {
             // 键盘读取一行
             String str = input.readLine();
 
-            if ("end".equals(str)) {
+            if (STOP.equals(str)) {
                 System.exit(0);
             }
 
@@ -76,11 +77,10 @@ public class Client {
             // 发送到服务器
             socketPrintStream.println(str);
 
-
             // 从服务器读取一行
             String echo = socketBufferedReader.readLine();
 
-            if (ClientConfig.STOP.equalsIgnoreCase(echo)) {
+            if (STOP.equalsIgnoreCase(echo)) {
                 flag = false;
             } else {
 
@@ -98,6 +98,4 @@ public class Client {
         socketBufferedReader.close();
 
     }
-
-
 }

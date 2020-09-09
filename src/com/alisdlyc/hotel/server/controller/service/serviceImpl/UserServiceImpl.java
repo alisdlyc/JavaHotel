@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @author alisdlyc
+ */
 public class UserServiceImpl implements UserService {
     @Override
     public String addUser(String usr, String psw) {
@@ -18,10 +21,11 @@ public class UserServiceImpl implements UserService {
         ResultSet rs = null;
 
         try {
+
             conn = JdbcUtils.getConnection();
 
             String primSql = "SELECT * FROM usr where `name` = ?";
-            String sql = "INSERT INTO usr(`name`,`password`) VALUES(?,?)";
+            String sql = "INSERT INTO usr(`name`,`password`,`authority`) VALUES(?,?,?)";
 
             st = conn.prepareStatement(primSql);
             st.setString(1, usr);
@@ -34,16 +38,18 @@ public class UserServiceImpl implements UserService {
             st = conn.prepareStatement(sql);
             st.setString(1, usr);
             st.setString(2, psw);
+            if (usr.contains("admin")) {
+                st.setInt(3, 1);
+            } else {
+                st.setInt(3, 0);
+            }
 
             int i = st.executeUpdate();
             if (i > 0) {
                 return "OK";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -66,6 +72,7 @@ public class UserServiceImpl implements UserService {
             if (rs.next()) {
                 cookie.loginStage.replace("" + socket.getInetAddress() + socket.getPort(), usr);
                 System.out.println(rs.getString("name") + "is login");
+
                 System.out.println("当前连接到服务器的用户列表: ");
                 System.out.println(cookie.loginStage);
                 return "OK";
@@ -73,8 +80,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -85,7 +90,7 @@ public class UserServiceImpl implements UserService {
             cookie.loginStage.replace("" + socket.getInetAddress() + socket.getPort(), null);
             return "OK";
         } else {
-            return "尚未登录";
+            return "FAIL";
         }
     }
 
@@ -98,7 +103,7 @@ public class UserServiceImpl implements UserService {
     public String adminDelete(CookieStorage cookie, Socket socket, String admin, String usr) {
 
         if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
-            return "请登录";
+            return "FAIL";
         }
         Connection conn = null;
         PreparedStatement st = null;
@@ -114,7 +119,8 @@ public class UserServiceImpl implements UserService {
 
             rs = st.executeQuery();
             if (rs.next() && "2".equals(rs.getString("authority"))) {
-                sql = "DELETE FROM usr WHERE `name` = ? and `authority` = 1";
+//                sql = "DELETE FROM usr WHERE `name` = ? and `authority` = 1";
+                sql = "DELETE FROM usr WHERE `name` = ? ";
                 st = conn.prepareStatement(sql);
                 st.setString(1, usr);
 
@@ -135,8 +141,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
     }
@@ -145,7 +149,7 @@ public class UserServiceImpl implements UserService {
     public String showReservations(CookieStorage cookie, Socket socket) {
 
         if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
-            return "请登录";
+            return "FAIL";
         }
         Connection conn = null;
         PreparedStatement st = null;
@@ -164,40 +168,43 @@ public class UserServiceImpl implements UserService {
                 sql = "SELECT * FROM `order`";
                 st = conn.prepareStatement(sql);
                 rs = st.executeQuery();
-                StringBuilder re = new StringBuilder();
-                while (rs.next()) {
-                    re.append(rs.getString("id"));
-                    re.append(" ");
-
-                    re.append(rs.getString("usrname"));
-                    re.append(" ");
-
-                    re.append(rs.getString("roomnumber"));
-                    re.append(" ");
-
-                    re.append(rs.getString("begintime"));
-                    re.append(" ");
-
-                    re.append(rs.getString("endtime"));
-                    re.append("\t");
-
-                }
+                StringBuilder re = getStringBuilder(rs);
                 return re.toString();
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
         return "FAIL";
+    }
+
+    private StringBuilder getStringBuilder(ResultSet rs) throws SQLException {
+        StringBuilder re = new StringBuilder();
+        while (rs.next()) {
+            re.append(rs.getString("id"));
+            re.append(" ");
+
+            re.append(rs.getString("usrname"));
+            re.append(" ");
+
+            re.append(rs.getString("roomnumber"));
+            re.append(" ");
+
+            re.append(rs.getString("begintime"));
+            re.append(" ");
+
+            re.append(rs.getString("endtime"));
+            re.append("\n");
+
+        }
+        return re;
     }
 
     @Override
     public String showReservation(CookieStorage cookie, Socket socket) {
         if (cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()) == null) {
-            return "请登录";
+            return "FAIL";
         }
         Connection conn = null;
         PreparedStatement st = null;
@@ -210,32 +217,13 @@ public class UserServiceImpl implements UserService {
             st = conn.prepareStatement(sql);
             st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
             rs = st.executeQuery();
-            StringBuilder re = new StringBuilder();
-            while (rs.next()) {
-                re.append(rs.getString("id"));
-                re.append(" ");
-
-                re.append(rs.getString("usrname"));
-                re.append(" ");
-
-                re.append(rs.getString("roomnumber"));
-                re.append(" ");
-
-                re.append(rs.getString("begintime"));
-                re.append(" ");
-
-                re.append(rs.getString("endtime"));
-                re.append("\t");
-
-            }
+            StringBuilder re = getStringBuilder(rs);
             return re.toString();
 
 
         } catch (SQLException e) {
             e.printStackTrace();
             return "FAIL";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
         }
     }
 }

@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @author alisdlyc
+ */
 public class RoomServiceImpl implements RoomService {
 
     @Override
@@ -33,25 +36,28 @@ public class RoomServiceImpl implements RoomService {
             rs = st.executeQuery();
             if (rs.next()) {
                 System.out.println(rs.getString("roomnumber") + "is already exist");
-                return "FAIL -- room number already exist";
+                return "FAIL";
             }
 
             String primSql = "SELECT `authority` FROM usr where `name` = ?";
 
             st = conn.prepareStatement(primSql);
+
             st.setString(1, cookie.loginStage.get("" + socket.getInetAddress() + socket.getPort()));
+
             rs = st.executeQuery();
 
             if (rs.next()) {
                 int authority = Integer.parseInt(rs.getString("authority"));
 
                 if (authority <= 0) {
-                    return "FAIL -- authority denied";
+                    return "FAIL";
                 }
             }
 
             String sql = "INSERT INTO `room`(`roomnumber`) VALUES(?)";
             st = conn.prepareStatement(sql);
+
             st.setString(1, number);
             int i = st.executeUpdate();
             if (i > 0) {
@@ -62,9 +68,7 @@ public class RoomServiceImpl implements RoomService {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return "FAIL -- Exception";
-        } finally {
-            JdbcUtils.release(conn, st, rs);
+            return "FAIL";
         }
     }
 }

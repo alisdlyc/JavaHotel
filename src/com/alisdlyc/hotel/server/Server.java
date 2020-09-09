@@ -35,7 +35,7 @@ public class Server {
                 // 客户端构建异步线程
                 ClientHandler clientHandler = new ClientHandler(client);
                 // 启动线程
-                clientHandler.run();
+                clientHandler.start();
             } catch (Exception e) {
                 return;
             }
@@ -57,9 +57,9 @@ public class Server {
         @Override
         public void run() {
             super.run();
-            System.out.println("新客户端连接：" + socket.getInetAddress() + " Port:" + socket.getPort());
-
             try {
+                System.out.println("新客户端连接：" + socket.getInetAddress() + " Port:" + socket.getPort());
+
                 // 得到打印流，用于数据输出；服务器回送数据使用
                 PrintStream socketOutput = new PrintStream(socket.getOutputStream());
                 socketOutput.println("server Connected, please enter command:");
@@ -75,11 +75,7 @@ public class Server {
                     if ("end".equals(str)) {
                         flag = false;
                     } else {
-                        // 对客户端发送的信息进行响应
-
-                        str = new CommandProcessor().process(str, cookieStorage, socket);
-
-                        socketOutput.println(str);
+                        socketOutput.println(new CommandProcessor().process(str, cookieStorage, socket));
                     }
 
                 } while (flag);
@@ -87,18 +83,12 @@ public class Server {
                 socketInput.close();
                 socketOutput.close();
 
-            } catch (Exception e) {
-                System.out.println("连接异常断开");
-            } finally {
-                // 连接关闭
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+                socket.close();
 
-            System.out.println("客户端已退出：" + socket.getInetAddress() + " Port:" + socket.getPort());
+                System.out.println("客户端已退出：" + socket.getInetAddress() + " Port:" + socket.getPort());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     }
